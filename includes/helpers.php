@@ -232,6 +232,19 @@ function timeAgo(string $datetime): string {
 }
 
 /**
+ * Libellé affiché pour un type de terrain (valeur de terrains.type)
+ */
+function terrainTypeLabel(?string $type): string {
+    $labels = [
+        'grand'     => 'Grand',
+        'mini'      => 'Mini',
+        'petit'     => 'Petits camps (5v5)',
+        'petit_6v6' => 'Petits camps (6v6)',
+    ];
+    return $labels[$type ?? ''] ?? ucfirst((string) $type);
+}
+
+/**
  * Générer une classe de badge selon le statut
  */
 function statusBadgeClass(string $status): string {

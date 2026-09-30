@@ -402,7 +402,7 @@ option.slot-transition {
                                 <div class="card-body text-center">
                                     <i class="fas fa-futbol fa-3x text-primary mb-3"></i>
                                     <h5><?= e($terrain['nom']) ?></h5>
-                                    <span class="badge bg-secondary mb-2"><?= ucfirst($terrain['type']) ?></span>
+                                    <span class="badge bg-secondary mb-2"><?= terrainTypeLabel($terrain['type']) ?></span>
                                     <?php $prixNormalTerrain = (float)($terrain['prix_heure_pointe'] ?: $terrain['prix_heure']); ?>
                                     <div class="fw-bold text-accent terrain-prix" data-base="<?= $prixNormalTerrain ?>">
                                         <?= formatMoney($prixNormalTerrain) ?>/h

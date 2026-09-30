@@ -803,7 +803,7 @@ $tarifRules = [
                         <i class="fas fa-futbol"></i>
                     </div>
                     <div class="terrain-info" style="flex:1;">
-                        <strong><?= e(ucfirst($terrain['type']) . ' ' . $terrain['nom']) ?></strong>
+                        <strong><?= e(terrainTypeLabel($terrain['type']) . ' ' . $terrain['nom']) ?></strong>
                         <div class="mt-1" style="font-size:0.82em; line-height:1.5;">
                             <?php if ($prixMatinal != $prixNormal): ?>
                                 <div style="color:#28A745; font-weight:600;">Matin : de <?= $hOuverture ?> à <?= $hCoupure ?> · <?= formatMoney($prixMatinal) ?></div>

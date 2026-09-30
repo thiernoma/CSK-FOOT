@@ -64,7 +64,7 @@ include VIEWS_PATH . 'layouts/header.php';
     <div>
         <h4 class="mb-1"><?= e($terrain['nom']) ?></h4>
         <span class="badge <?= statusBadgeClass($terrain['statut']) ?> me-2"><?= translateStatus($terrain['statut']) ?></span>
-        <span class="badge bg-secondary"><?= ucfirst($terrain['type']) ?></span>
+        <span class="badge bg-secondary"><?= terrainTypeLabel($terrain['type']) ?></span>
     </div>
     <div class="d-flex gap-2">
         <a href="<?= url('reservations/nouveau.php?terrain=' . $id) ?>" class="btn btn-accent">

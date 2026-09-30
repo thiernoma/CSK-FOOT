@@ -59,7 +59,7 @@ include VIEWS_PATH . 'layouts/header.php';
 
                 <!-- Badge type -->
                 <span class="position-absolute top-0 start-0 m-3 badge bg-dark">
-                    <?= ucfirst($terrain['type']) ?>
+                    <?= terrainTypeLabel($terrain['type']) ?>
                 </span>
             </div>
 

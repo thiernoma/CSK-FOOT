@@ -109,7 +109,7 @@ include VIEWS_PATH . 'layouts/header.php';
                                     <a href="<?= url('terrains/voir.php?id=' . $reservation['terrain_id']) ?>" class="fw-bold">
                                         <?= e($reservation['terrain_nom']) ?>
                                     </a>
-                                    <span class="badge bg-secondary ms-1"><?= ucfirst($reservation['terrain_type']) ?></span>
+                                    <span class="badge bg-secondary ms-1"><?= terrainTypeLabel($reservation['terrain_type']) ?></span>
                                 </td>
                             </tr>
                         </table>

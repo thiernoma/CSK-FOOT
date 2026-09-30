@@ -209,7 +209,7 @@ foreach ($terrains as $t) {
                         <div class="terrain-header-row">
                             <div>
                                 <h3 class="terrain-name"><?= e($terrain['nom']) ?></h3>
-                                <span class="terrain-type"><?= ucfirst($terrain['type']) ?></span>
+                                <span class="terrain-type"><?= terrainTypeLabel($terrain['type']) ?></span>
                             </div>
                             <?php if ($terrainStats['note_moyenne']): ?>
                             <div class="terrain-rating">

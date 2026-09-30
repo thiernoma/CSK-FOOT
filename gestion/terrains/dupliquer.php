@@ -152,8 +152,8 @@ include VIEWS_PATH . 'layouts/header.php';
                                 <option value="grand" <?= $data['type'] === 'grand' ? 'selected' : '' ?>>Grand terrain (11v11)</option>
                                 <option value="mini" <?= $data['type'] === 'mini' ? 'selected' : '' ?>>Mini terrain (8v8)</option>
                                 <option value="mini" <?= $data['type'] === 'mini' ? 'selected' : '' ?>>Mini terrain (7v7)</option>
-                                <option value="petit_6v6" <?= $data['type'] === 'petit_6v6' ? 'selected' : '' ?>>Petit terrain (6v6)</option>
-                                <option value="petit" <?= $data['type'] === 'petit' ? 'selected' : '' ?>>Petit terrain (5v5)</option>
+                                <option value="petit_6v6" <?= $data['type'] === 'petit_6v6' ? 'selected' : '' ?>>Petits camps (6v6)</option>
+                                <option value="petit" <?= $data['type'] === 'petit' ? 'selected' : '' ?>>Petits camps (5v5)</option>
                             </select>
                         </div>
 
