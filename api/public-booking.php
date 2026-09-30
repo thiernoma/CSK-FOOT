@@ -234,9 +234,8 @@ try {
                 ]);
             }
 
-            // Créneaux possibles — identiques au back-office (pas de 30 min, de l'ouverture
-            // jusqu'à la fermeture) via getTimeSlots().
-            $allSlots = getTimeSlots();
+            // Créneaux de départ autorisés (règle commune site + back-office, voir helpers.php)
+            $allSlots = getReservationStartSlots();
 
             // Récupérer les créneaux réservés (op-time)
             $reserved = Terrain::getReservedSlots($terrainId, $date);

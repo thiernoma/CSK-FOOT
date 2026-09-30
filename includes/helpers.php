@@ -480,6 +480,66 @@ function getTimeSlots($start = null, $end = null, int $stepMinutes = 30): array 
 }
 
 /**
+ * Créneaux de DÉBUT de réservation (op-time, ex: "24:30" = 00:30 du lendemain).
+ * Règle du complexe :
+ *  - heures pleines de l'ouverture jusqu'à 21:00 (08:00, 09:00, ... 21:00)
+ *  - puis décalées d'une demi-heure : 22:30, 23:30, 00:30, 01:30 ...
+ *  - seulement si 1 heure de jeu tient avant la fermeture (CLOSING_TIME)
+ * Utilisée par le site public ET le back-office.
+ */
+function getReservationStartSlots(): array {
+    $finHeuresPleines = 21 * 60;       // dernier départ "heure pleine" : 21:00
+    $debutEtDemie     = 22 * 60 + 30;  // premier départ "et demie"    : 22:30
+    $fermeture        = opTimeToMinutes(CLOSING_TIME_OP);
+
+    $slots = [];
+    foreach (getTimeSlots() as $slot) {
+        $min = opTimeToMinutes($slot);
+        if ($min + 60 > $fermeture) {
+            continue;
+        }
+        $heurePleine = ($min <= $finHeuresPleines && $min % 60 === 0);
+        $etDemie     = ($min >= $debutEtDemie && $min % 60 === 30);
+        if ($heurePleine || $etDemie) {
+            $slots[] = $slot;
+        }
+    }
+    return $slots;
+}
+
+/**
+ * Heures de FIN possibles : un départ autorisé + 1, 2, 3... heures,
+ * sans dépasser la fermeture.
+ */
+function getReservationEndSlots(): array {
+    $fermeture = opTimeToMinutes(CLOSING_TIME_OP);
+    $ends = [];
+    foreach (getReservationStartSlots() as $slot) {
+        for ($fin = opTimeToMinutes($slot) + 60; $fin <= $fermeture; $fin += 60) {
+            $ends[$fin] = minutesToOpTime($fin);
+        }
+    }
+    ksort($ends);
+    return array_values($ends);
+}
+
+/**
+ * Ajoute à une liste de créneaux la valeur actuelle si elle n'y figure pas
+ * (ex: ancienne réservation à 08:30), pour ne pas la perdre en modification.
+ */
+function withCurrentSlot(array $slots, ?string $current): array {
+    $current = $current ? substr($current, 0, 5) : '';
+    if ($current === '' || in_array($current, $slots, true)) {
+        return $slots;
+    }
+    $slots[] = $current;
+    usort($slots, function ($a, $b) {
+        return opTimeToMinutes($a) <=> opTimeToMinutes($b);
+    });
+    return $slots;
+}
+
+/**
  * Valider un fichier uploadé
  */
 function validateUpload(array $file, array $allowedTypes = [], int $maxSize = 0): array {

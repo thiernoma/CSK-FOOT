@@ -126,8 +126,10 @@ if (isPost()) {
     }
 }
 
-// Créneaux horaires disponibles (en op-time, ex: 08:00 → 26:40)
-$timeSlots = getTimeSlots();
+// Créneaux autorisés (règle commune site + back-office, voir helpers.php).
+// On garde l'heure déjà saisie si elle sort de la règle (ex: ancienne réservation à 08:30).
+$slotsDebut = withCurrentSlot(getReservationStartSlots(), $data['heure_debut'] ?? '');
+$slotsFin   = withCurrentSlot(getReservationEndSlots(), $data['heure_fin'] ?? '');
 
 // Règles tarifaires pour JS (matinal / normal / weekend sur les cartes)
 // heure_pointe_debut = heure de coupure : avant = matinal, à partir de = normal.
@@ -441,7 +443,7 @@ option.slot-transition {
                             <label class="form-label">Heure de début</label>
                             <select class="form-select form-select-lg" name="heure_debut" id="heureDebut" required>
                                 <option value="">Sélectionner...</option>
-                                <?php foreach ($timeSlots as $slot): $sw = opToWall($slot); ?>
+                                <?php foreach ($slotsDebut as $slot): $sw = opToWall($slot); ?>
                                     <option value="<?= $slot ?>" <?= $data['heure_debut'] === $slot ? 'selected' : '' ?>>
                                         <?= $sw['wall'] ?><?= $sw['next_day'] ? ' (lendemain)' : '' ?>
                                     </option>
@@ -452,7 +454,7 @@ option.slot-transition {
                             <label class="form-label">Heure de fin</label>
                             <select class="form-select form-select-lg" name="heure_fin" id="heureFin" required>
                                 <option value="">Sélectionner...</option>
-                                <?php foreach ($timeSlots as $slot): $sw = opToWall($slot); ?>
+                                <?php foreach ($slotsFin as $slot): $sw = opToWall($slot); ?>
                                     <option value="<?= $slot ?>" <?= $data['heure_fin'] === $slot ? 'selected' : '' ?>>
                                         <?= $sw['wall'] ?><?= $sw['next_day'] ? ' (lendemain)' : '' ?>
                                     </option>

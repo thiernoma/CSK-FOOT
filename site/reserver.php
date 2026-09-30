@@ -1006,12 +1006,11 @@ $tarifRules = [
         var OPENING_MIN = <?= OPENING_HOUR_OP * 60 ?>;
         var CLOSING_MIN = <?= opTimeToMinutes(CLOSING_TIME_OP) ?>;
 
-        // Liste des créneaux de départ — identiques à ceux du back-office :
-        // getTimeSlots() = pas de 30 min, de l'ouverture jusqu'à la fermeture (CLOSING_TIME_OP).
+        // Créneaux de départ autorisés (règle commune site + back-office, voir helpers.php)
         var TIME_SLOTS = <?= json_encode(array_map(function($s) {
             $w = opToWall($s);
             return ['op' => $s, 'wall' => $w['wall'], 'next_day' => $w['next_day']];
-        }, getTimeSlots())) ?>;
+        }, getReservationStartSlots())) ?>;
 
         // Convertit minutes → "HH:MM" en op-time (peut dépasser 24h)
         function minutesToOp(min) {
