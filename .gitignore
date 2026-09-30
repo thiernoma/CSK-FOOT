@@ -1,0 +1,21 @@
+# Configuration locale (identifiants BDD, clés Wave)
+config/config.php
+
+# Données et fichiers générés
+logs/
+uploads/
+public/uploads/
+pdf/generated/
+api/error_log
+error_log
+
+# Sauvegardes et exports
+*.sql
+*.sql.gz
+*.zip
+*.bak
+
+# Système / éditeur
+.vscode/
+Thumbs.db
+desktop.ini

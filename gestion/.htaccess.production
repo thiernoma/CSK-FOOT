@@ -1,0 +1,36 @@
+# Apache Configuration - Back-office - VERSION PRODUCTION
+# Complexe Sportif Kaira
+# A RENOMMER EN .htaccess sur le serveur cPanel (dans le dossier gestion/)
+
+# Enable URL Rewriting
+RewriteEngine On
+
+# Production (cPanel/public_html)
+RewriteBase /gestion/
+
+# Allow direct access to static files (images, css, js, fonts)
+RewriteCond %{REQUEST_URI} \.(css|js|jpg|jpeg|png|gif|ico|svg|webp|woff|woff2|ttf|eot|map)$ [NC]
+RewriteRule ^ - [L]
+
+# Remove .php extension
+# If the request is for a directory, don't do anything
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# If the request is for a file that exists, don't do anything
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# If requesting a file without .php extension, add .php
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php [L]
+
+# Redirect .php URLs to clean URLs
+RewriteCond %{REQUEST_METHOD} !POST
+RewriteCond %{HTTP:X-Requested-With} !XMLHttpRequest
+RewriteCond %{THE_REQUEST} /gestion/([^.]+)\.php [NC]
+RewriteRule ^ /gestion/%1 [NC,L,R=301]
+
+# Default charset
+AddDefaultCharset UTF-8
+
+# Prevent directory listing
+Options -Indexes
