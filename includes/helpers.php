@@ -480,31 +480,37 @@ function getTimeSlots($start = null, $end = null, int $stepMinutes = 30): array 
 }
 
 /**
- * Créneaux de DÉBUT de réservation (op-time, ex: "24:30" = 00:30 du lendemain).
- * Règle du complexe :
+ * Créneaux de DÉBUT de réservation (op-time : "24:40" = 00:40 du lendemain).
+ * Règle du complexe (site public ET back-office) :
  *  - heures pleines de l'ouverture jusqu'à 21:00 (08:00, 09:00, ... 21:00)
- *  - puis décalées d'une demi-heure : 22:30, 23:30, 00:30, 01:30 ...
- *  - seulement si 1 heure de jeu tient avant la fermeture (CLOSING_TIME)
- * Utilisée par le site public ET le back-office.
+ *  - puis les départs de soirée/nuit listés dans $departsNuit ci-dessous
+ * Un créneau n'est proposé que si 1 heure de jeu tient avant la fermeture (CLOSING_TIME).
+ * >>> Pour changer les horaires de nuit, il suffit de modifier la liste $departsNuit. <<<
  */
 function getReservationStartSlots(): array {
-    $finHeuresPleines = 21 * 60;       // dernier départ "heure pleine" : 21:00
-    $debutEtDemie     = 22 * 60 + 30;  // premier départ "et demie"    : 22:30
-    $fermeture        = opTimeToMinutes(CLOSING_TIME_OP);
+    $dernierePleine = 21;   // dernière heure pleine de la journée : 21:00
+
+    // Départs après 21:00, en op-time (au-delà de minuit : 24:xx = 00:xx, 25:xx = 01:xx)
+    $departsNuit = [
+        '22:00', '22:30', '23:00', '23:40',   // soirée
+        '24:00', '24:40', '25:00', '25:40',   // 00:00, 00:40, 01:00, 01:40 (lendemain)
+    ];
+
+    $ouverture = opTimeToMinutes(OPENING_TIME);
+    $fermeture = opTimeToMinutes(CLOSING_TIME_OP);
 
     $slots = [];
-    foreach (getTimeSlots() as $slot) {
-        $min = opTimeToMinutes($slot);
-        if ($min + 60 > $fermeture) {
-            continue;
-        }
-        $heurePleine = ($min <= $finHeuresPleines && $min % 60 === 0);
-        $etDemie     = ($min >= $debutEtDemie && $min % 60 === 30);
-        if ($heurePleine || $etDemie) {
-            $slots[] = $slot;
-        }
+    for ($h = intdiv($ouverture + 59, 60); $h <= $dernierePleine; $h++) {
+        $slots[] = minutesToOpTime($h * 60);
     }
-    return $slots;
+    foreach ($departsNuit as $depart) {
+        $slots[] = $depart;
+    }
+
+    // Ne garder que les départs où 1 heure de jeu tient avant la fermeture
+    return array_values(array_filter($slots, function ($slot) use ($fermeture) {
+        return opTimeToMinutes($slot) + 60 <= $fermeture;
+    }));
 }
 
 /**
