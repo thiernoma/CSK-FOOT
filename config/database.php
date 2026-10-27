@@ -21,7 +21,10 @@ class Database {
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                     PDO::ATTR_EMULATE_PREPARES => false,
-                    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . DB_CHARSET
+                    // Aligne le fuseau de MySQL sur celui de PHP (Africa/Dakar, défini dans config.php).
+                    // Sans cela, NOW(), CURDATE() et les DEFAULT current_timestamp() utilisent le fuseau
+                    // du serveur O2Switch (Europe/Paris) : +1h l'hiver, +2h l'été.
+                    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . DB_CHARSET . ", time_zone = '" . date('P') . "'"
                 ];
 
                 self::$instance = new PDO($dsn, DB_USER, DB_PASS, $options);
